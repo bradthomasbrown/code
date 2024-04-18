@@ -1,1 +1,1 @@
-export * from './lib/schemas/mod.ts'
+export * from './lib/mod.ts'
