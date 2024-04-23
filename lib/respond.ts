@@ -4,7 +4,7 @@ type RespondArgs = {
 }
 
 function replacer(_key:unknown, value:unknown) {
-  typeof value == 'bigint'
+  return typeof value == 'bigint'
     ? `0x${value.toString(16)}`
     : value
 }
