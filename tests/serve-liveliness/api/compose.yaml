@@ -1,0 +1,8 @@
+services:
+  api:
+    build: .
+    entrypoint: [ "deno" ]
+    command: [ "run", "--allow-net", "serve.ts" ]
+    volumes:
+      - ../../../lib:/app/lib
+      - ../../../deno.json:/app/deno.json
