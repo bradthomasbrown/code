@@ -1,0 +1,12 @@
+include:
+  - api/compose.yaml
+services:
+  test:
+    build: .
+    depends_on:
+      - api
+    entrypoint: [ "deno" ]
+    command: [ "test", "--allow-net", "test.ts" ]
+    volumes:
+      - ../../lib:/test/lib
+      - ../../deno.json:/test/deno.json
