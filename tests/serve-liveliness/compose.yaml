@@ -2,11 +2,10 @@ include:
   - api/compose.yaml
 services:
   test:
-    build: .
+    build:
+      context: ../..
+      dockerfile: tests/serve-liveliness/Dockerfile
     depends_on:
       - api
     entrypoint: [ "deno" ]
     command: [ "test", "--allow-net", "test.ts" ]
-    volumes:
-      - ../../lib:/test/lib
-      - ../../deno.json:/test/deno.json
