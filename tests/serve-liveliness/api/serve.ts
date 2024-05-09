@@ -1,5 +1,5 @@
-import { Server } from "lib/mod.ts";
-import { ServeHandler } from "types/ServeHandler.ts";
+import { Server } from "../../../lib/mod.ts";
+import { ServeHandler } from "../../../lib/types/ServeHandler.ts";
 
 const handler:ServeHandler = (jraRequest, _request, _info) => {
     const result = { foo: 'bar' }

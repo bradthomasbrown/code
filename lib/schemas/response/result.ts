@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { base } from "schemas/response/base.ts";
-import { json } from "schemas/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { base } from "./base.ts";
+import { json } from "../../mod.ts";
 
 export const result = base.and(z.object({
   result: json

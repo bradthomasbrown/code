@@ -1,4 +1,4 @@
-import * as jra from 'lib/mod.ts'
+import * as jra from './mod.ts'
 
 function replacer(_key:unknown, value:unknown) {
     return typeof value == 'bigint'

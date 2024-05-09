@@ -1,5 +1,5 @@
-import { JraRequestParams, JraId } from "types/mod.ts";
-import * as jra from 'lib/mod.ts'
+import { JraRequestParams, JraId } from "./types/mod.ts";
+import * as jra from './mod.ts'
 
 export class Client {
     rpc:string

@@ -1,3 +1,3 @@
-export * from "schemas/request/mod.ts"
-export * from "schemas/response/mod.ts"
-export { json } from 'lib/json.ts'
+export * from "./request/mod.ts"
+export * from "./response/mod.ts"
+export { json } from '../json.ts'

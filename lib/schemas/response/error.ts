@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { base } from "schemas/response/base.ts";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { base } from "./base.ts";
 
 export const error = base.and(z.object({
   error: z.object({
