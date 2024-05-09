@@ -1,4 +1,3 @@
-import { JraRequestParams, JraId } from "./types/mod.ts";
 import * as jra from './mod.ts'
 
 export class Client {
@@ -6,7 +5,7 @@ export class Client {
     constructor(rpc:string) {
         this.rpc = rpc
     }
-    async request(method:string, params:JraRequestParams, id:JraId) {
+    async request(method:string, params:jra.types.Params, id:jra.types.Id) {
         const foo = await fetch(this.rpc, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

@@ -1,3 +1,3 @@
 import * as jra from '../mod.ts'
 
-export type JraId = jra.types.Request['id']
+export type Id = jra.types.Request['id']

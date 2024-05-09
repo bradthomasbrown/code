@@ -1,3 +1,3 @@
 import * as jra from '../mod.ts'
 
-export type JraRequestParams = jra.types.Request['params']
+export type Params = jra.types.Request['params']
