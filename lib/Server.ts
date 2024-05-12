@@ -8,7 +8,7 @@ function replacer(_key:unknown, value:unknown) {
 
 export class Server {
     
-    static serve(port:number=80, jraServeHandler:jra.types.ServeHandler) {
+    static serve(options:Deno.ServeOptions, jraServeHandler:jra.types.ServeHandler) {
         async function denoServeHandler(
             request:Request,
             info:Deno.ServeHandlerInfo,
@@ -18,7 +18,7 @@ export class Server {
             if (result instanceof Response) return result
             else return jraServeHandler(result, request, info)
         }
-        Deno.serve({ port }, (...x) => denoServeHandler(...x, jraServeHandler))
+        Deno.serve(options, (...x) => denoServeHandler(...x, jraServeHandler))
     }
 
     static async extract(request:Request):Promise<Response|jra.types.Request> {
