@@ -14,6 +14,14 @@ export class Docker {
         return id
     }
 
+    static async exec(image:string) {
+        const args = ['run', '--rm', image]
+        const stderr = 'piped', stdout = 'piped'
+        const options = { args, stderr, stdout } as const
+        const cmdOut = await new Deno.Command('docker', options).output()
+        return new TextDecoder().decode(cmdOut.stdout)
+    }
+
     static async inspect(id:string) {
         const args = ['inspect', id]
         const stderr = 'piped', stdout = 'piped'
