@@ -7,6 +7,7 @@ export class ExitHandlers {
         if (ExitHandlers.#instance) return ExitHandlers.#instance
         this.#handlers = []
         globalThis.addEventListener('beforeunload', (_e:Event) => this.execute())
+        globalThis.addEventListener('unload', (_e:Event) => this.execute())
         globalThis.addEventListener('unhandledrejection', (e:Event) => {
             if (e instanceof PromiseRejectionEvent) console.error(e.reason)
             this.execute()
