@@ -1,4 +1,4 @@
-import { ExitHandlers } from 'https://cdn.jsdelivr.net/gh/bradbrown-llc/ExitHandlers@0.0.1/mod.ts'
+import { ExitHandlers } from 'https://cdn.jsdelivr.net/gh/bradbrown-llc/exit-handlers@0.0.1/mod.ts'
 import * as schemas from './schemas/mod.ts'
 import * as jra from 'https://cdn.jsdelivr.net/gh/bradbrown-llc/jra@0.1.1/lib/mod.ts'
 
