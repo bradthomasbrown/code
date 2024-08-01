@@ -17,6 +17,11 @@ export class Abi {
 
     constructor(abiObject:AbiObject) {
         this.#abiObject = abiObject
+        for (const abiElementObject of abiObject)
+            if (abiElementObject.type == 'constructor') abiElementObject.name = 'construct'
+        const constructors = abiObject.filter(({ name }) => name == 'construct')
+        if (!constructors.length) abiObject.push({ type: 'constructor', name: 'construct', inputs: [] })
+        if (constructors.length > 1) throw new Error('too many constructors')
     }
 
     signatureComponentsMap():Map<string,SignatureComponents[]> {
