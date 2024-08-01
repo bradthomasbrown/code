@@ -3,11 +3,11 @@ import { abiObject } from '../../abi/schemas/_abiObject.ts'
 
 export const solcJsonOutputObject = z.object({
     contracts: z.record(z.record(z.object({
-        abi: abiObject,
+        abi: abiObject.optional(),
         evm: z.object({
             bytecode: z.object({
                 object: z.string().optional()
-            }).optional()
-        }).optional()
+            }).passthrough().optional()
+        }).passthrough().optional()
     })))
-})
+}).passthrough()
