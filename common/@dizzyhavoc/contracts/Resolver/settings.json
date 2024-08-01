@@ -1,0 +1,22 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "Resolver.sol": {
+      "urls": [
+        "Resolver.sol"
+      ]
+    }
+  },
+  "settings": {
+    "outputSelection": {
+      "Resolver.sol": {
+        "Resolver": [
+          "evm.bytecode.object",
+          "evm.bytecode.linkReferences",
+          "abi"
+        ]
+      }
+    },
+    "evmVersion": "paris"
+  }
+}
