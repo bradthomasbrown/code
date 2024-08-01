@@ -10,8 +10,9 @@ import { SolcJsonOutput } from './SolcJsonOutput.ts'
  */
 export async function compile(solcJsonInputPath:string):Promise<SolcJsonOutput> {
     const solcJsonInput = await SolcJsonInput.fromPath(solcJsonInputPath)
+    const cacheDir = `${Deno.env.get('HOME')!}/.kaaos/solc`
+    if (!await Deno.stat(cacheDir).catch(() => undefined)) await Deno.mkdir(cacheDir, { recursive: true })
     const release = await solcJsonInput.bestRelease()
-    await Deno.mkdir(`${Deno.env.get('HOME')!}/.kaaos/solc`, { recursive: true })
     await fetchSolcRelease(release)
     const args = ['--standard-json', '--allow-paths', solcJsonInput.sourcePaths().join()]
     const options = { args, stdin: 'piped', stdout: 'piped', stderr: 'piped', cwd: Path.dirname(solcJsonInputPath) } as const
