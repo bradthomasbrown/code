@@ -26,19 +26,16 @@ export class Abi {
 
     signatureComponentsMap():Map<string,SignatureComponents[]> {
         const map = new Map<string,SignatureComponents[]>()
-        for (const abiElementObject of this.#abiObject) {
-            let name = abiElementObject.name
-            const inputs = abiElementObject.inputs
+        for (const { name, inputs } of this.#abiObject) {
             if (!name || !inputs) continue
-            if (name == 'constructor') name = 'construct'
             if (!map.has(name)) map.set(name, [])
             const signatureComponentsArray = map.get(name)!
             if (!inputs.length) { signatureComponentsArray.push({ type: 'nullary' }); continue }
-            const parameters = inputs.map(({ name, type }) => name ? `${name}:${normalize(type)}` : normalize(type)).join()
+            const parameters = inputs.map(({ name, internalType }) => name ? `${name}:${normalize(internalType)}` : normalize(internalType)).join()
             signatureComponentsArray.push({ parameters, type: 'index' })
             if (inputs.every(({ name }) => name)) {
                 const variables = inputs.map(({ name }) => name).join()
-                const types = inputs.map(({ name, type }) => `${name}:${normalize(type)}`).join()
+                const types = inputs.map(({ name, internalType }) => `${name}:${normalize(internalType)}`).join()
                 const parameters = `{${variables}}:{${types}}`
                 signatureComponentsArray.push({ parameters, types, type: 'name' })
             }
