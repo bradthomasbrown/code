@@ -1,6 +1,7 @@
+import { fromFileUrl } from 'https://deno.land/std@0.224.0/path/mod.ts'
 import { compile } from "../../../lib/compile.ts";
 
-const solcJsonOutput = await compile('./settings.json')
-const abi = solcJsonOutput.abi('WETH9')
-console.log(abi.toString())
-console.log(abi.signatureComponentsMap())
+const solcJsonInputPath = fromFileUrl(import.meta.resolve('../../../../common/WETH9/settings.json'))
+Deno.test('compilation success', async () => {
+    await compile(solcJsonInputPath)
+})
