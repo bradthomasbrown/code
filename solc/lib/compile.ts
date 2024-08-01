@@ -22,6 +22,5 @@ export async function compile(solcJsonInputPath:string):Promise<SolcJsonOutput> 
     await writer.close()
     const commandOutput = await proc.output()
     if (commandOutput.stderr.length) throw new Error('compile error', { cause: new TextDecoder().decode(commandOutput.stderr) })
-    const stdout = new TextDecoder().decode(commandOutput.stdout)
-    return new SolcJsonOutput(solcJsonOutputObject.parse(JSON.parse(stdout)))
+    return new SolcJsonOutput(solcJsonOutputObject.parse(JSON.parse(new TextDecoder().decode(commandOutput.stdout))))
 }
