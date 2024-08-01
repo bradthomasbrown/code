@@ -2,9 +2,12 @@ import { AbiObject } from "../types/_AbiObject.ts"
 import { SignatureComponents } from "../types/_SignatureComponents.ts";
 
 function normalize(type:string):string {
-    if (type.match(/^u?int\d+$/)) return 'bigint'
-    if (type.match(/^address$/)) return 'string'
-    if (type.match(/^bytes\d+$/)) return 'string'
+    const brackets = type.match(/\[\]/) ? '[]' : ''
+    const structMatch = type.match(/struct ([\w\.]+)/)
+    if (structMatch) return structMatch[1] + brackets
+    if (type.match(/u?int\d/)) return 'bigint' + brackets
+    if (type.match(/address/)) return 'string' + brackets
+    if (type.match(/bytes\d/)) return 'string' + brackets
     throw new Error(`cannot normalize unhandled type ${type}`)
 }
 
