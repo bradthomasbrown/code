@@ -27,4 +27,6 @@ export class SolcJsonOutput {
         return new Abi(abiObject)
     }
 
+    toString() { return JSON.stringify(this.#solcJsonOutputObject) }
+
 }
