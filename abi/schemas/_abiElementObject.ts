@@ -3,5 +3,6 @@ import { abiInputObject } from './_abiInputObject.ts'
 
 export const abiElementObject = z.object({
     name: z.string().optional(),
-    inputs: abiInputObject.array().optional()
+    inputs: abiInputObject.array().optional(),
+    type: z.string().optional()
 })
