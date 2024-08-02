@@ -37,12 +37,12 @@ export class Abi {
             const parameters = inputs.map((abiInputObject, i) => {
                 const { name, type, internalType } = abiInputObject
                 if (!internalType && !type) throw new Error(`abiInputObject no type`, { cause: { abiInputObject, abiElementObject } })
-                return`${name ? name : `param_${i}`}:${normalize((internalType ?? type)!)}`
+                return`${name ? name : `param_${i}`}:${normalize(internalType ?? type)}`
             }).join()
             signatureComponentsArray.push({ parameters, type: 'index' })
             if (inputs.every(({ name }) => name)) {
                 const variables = inputs.map(({ name }) => name).join()
-                const types = inputs.map(({ name, type, internalType }, i) => `${name ? name : `param_${i}`}:${normalize((internalType ?? type)!)}`).join()
+                const types = inputs.map(({ name, type, internalType }, i) => `${name ? name : `param_${i}`}:${normalize(internalType ?? type)}`).join()
                 const parameters = `{${variables}}:{${types}}`
                 signatureComponentsArray.push({ parameters, types, type: 'name' })
             }
