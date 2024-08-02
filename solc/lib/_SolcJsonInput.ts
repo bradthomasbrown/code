@@ -12,10 +12,10 @@ export class SolcJsonInput {
         Object.assign(this, solcJsonInputObject)
     }
 
-    static async fromPath(path:string):Promise<SolcJsonInput> {
+    static async fromPath(path:string, targetDir?:string):Promise<SolcJsonInput> {
         const text = await Deno.readTextFile(path)
         const solcJsonInputObject = solcJsonInputObjectSchema.parse(JSON.parse(text))
-        for (const source of Object.values(solcJsonInputObject.sources)) source.urls = source.urls.map(url => Path.resolve(Path.dirname(path), url))
+        for (const source of Object.values(solcJsonInputObject.sources)) source.urls = source.urls.map(url => Path.resolve(targetDir ?? Path.dirname(path), url))
         return new SolcJsonInput(solcJsonInputObject)
     }
 

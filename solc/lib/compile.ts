@@ -8,14 +8,14 @@ import { SolcJsonOutput } from './SolcJsonOutput.ts'
  * given a solc json input path, return the compilation results
  * @param solcJsonInputPath
  */
-export async function compile(solcJsonInputPath:string):Promise<SolcJsonOutput> {
-    const solcJsonInput = await SolcJsonInput.fromPath(solcJsonInputPath)
+export async function compile(solcJsonInputPath:string, targetDir?:string):Promise<SolcJsonOutput> {
+    const solcJsonInput = await SolcJsonInput.fromPath(solcJsonInputPath, targetDir)
     const cacheDir = `${Deno.env.get('HOME')!}/.kaaos/solc`
     if (!await Deno.stat(cacheDir).catch(() => undefined)) await Deno.mkdir(cacheDir, { recursive: true })
     const release = await solcJsonInput.bestRelease()
     await fetchSolcRelease(release)
     const args = ['--standard-json', '--allow-paths', solcJsonInput.sourcePaths().join()]
-    const options = { args, stdin: 'piped', stdout: 'piped', stderr: 'piped', cwd: Path.dirname(solcJsonInputPath) } as const
+    const options = { args, stdin: 'piped', stdout: 'piped', stderr: 'piped', cwd: targetDir ?? Path.dirname(solcJsonInputPath) } as const
     const proc = new Deno.Command(`${Deno.env.get('HOME')!}/.kaaos/solc/${release}`, options).spawn()
     const writer = proc.stdin.getWriter()
     await writer.write(new TextEncoder().encode(solcJsonInput.toString()))
