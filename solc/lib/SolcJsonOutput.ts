@@ -10,7 +10,9 @@ export class SolcJsonOutput {
     }
 
     bytecode(contract:string):string {
-        const sources = Object.values(this.#solcJsonOutputObject.contracts).filter(source => Object.keys(source).includes(contract))
+        const { contracts } = this.#solcJsonOutputObject
+        if (!contracts) throw new Error(`no contracts`)
+        const sources = Object.values(contracts).filter(source => Object.keys(source).includes(contract))
         if (!sources.length) throw new Error(`contract name '${contract}' not found`)
         if (sources.length > 1) throw new Error(`multiple contracts named '${contract} found`)
         const bytecode = sources[0][contract].evm?.bytecode?.object
@@ -19,7 +21,9 @@ export class SolcJsonOutput {
     }
 
     abi(contract:string):Abi {
-        const sources = Object.values(this.#solcJsonOutputObject.contracts).filter(source => Object.keys(source).includes(contract))
+        const { contracts } = this.#solcJsonOutputObject
+        if (!contracts) throw new Error(`no contracts`)
+        const sources = Object.values(contracts).filter(source => Object.keys(source).includes(contract))
         if (!sources.length) throw new Error(`contract name '${contract}' not found`)
         if (sources.length > 1) throw new Error(`multiple contracts named '${contract} found`)
         const abiObject = sources[0][contract].abi

@@ -9,5 +9,5 @@ export const solcJsonOutputObject = z.object({
                 object: z.string().optional()
             }).passthrough().optional()
         }).passthrough().optional()
-    })))
+    }))).optional()
 }).passthrough()
