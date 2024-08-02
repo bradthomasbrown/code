@@ -7,7 +7,7 @@ function normalize(type:string):string {
     if (structMatch) return structMatch[1] + brackets
     if (type.match(/u?int\d/)) return 'bigint' + brackets
     if (type.match(/address/)) return 'string' + brackets
-    if (type.match(/bytes\d/)) return 'string' + brackets
+    if (type.match(/bytes/)) return 'string' + brackets
     throw new Error(`cannot normalize unhandled type ${type}`)
 }
 
