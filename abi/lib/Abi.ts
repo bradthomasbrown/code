@@ -26,16 +26,23 @@ export class Abi {
 
     signatureComponentsMap():Map<string,SignatureComponents[]> {
         const map = new Map<string,SignatureComponents[]>()
-        for (const { name, inputs } of this.#abiObject) {
-            if (!name || !inputs) continue
+        for (const abiElementObject of this.#abiObject) {
+            const { name, inputs, type } = abiElementObject
+            if (type == 'error' || type == 'event' || type == 'fallback') continue
+            if (!name) throw new Error(`abiElementObject.name missing`, { cause: abiElementObject })
+            if (!inputs) throw new Error(`abiElementObjects.input missing`, { cause: abiElementObject })
             if (!map.has(name)) map.set(name, [])
             const signatureComponentsArray = map.get(name)!
             if (!inputs.length) { signatureComponentsArray.push({ type: 'nullary' }); continue }
-            const parameters = inputs.map(({ name, internalType }) => name ? `${name}:${normalize(internalType)}` : normalize(internalType)).join()
+            const parameters = inputs.map((abiInputObject, i) => {
+                const { name, type, internalType } = abiInputObject
+                if (!internalType && !type) throw new Error(`abiInputObject no type`, { cause: { abiInputObject, abiElementObject } })
+                return`${name ? name : `param_${i}`}:${normalize((internalType ?? type)!)}`
+            }).join()
             signatureComponentsArray.push({ parameters, type: 'index' })
             if (inputs.every(({ name }) => name)) {
                 const variables = inputs.map(({ name }) => name).join()
-                const types = inputs.map(({ name, internalType }) => `${name}:${normalize(internalType)}`).join()
+                const types = inputs.map(({ name, type, internalType }, i) => `${name ? name : `param_${i}`}:${normalize((internalType ?? type)!)}`).join()
                 const parameters = `{${variables}}:{${types}}`
                 signatureComponentsArray.push({ parameters, types, type: 'name' })
             }
