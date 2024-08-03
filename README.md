@@ -1,3 +1,16 @@
+# Changes Made
+## Summary
+The goal is to acquire the original WETH9 contract source code and trim to only what's necessary.
+
+## Detailed Changes
+1. Removed all files and directories except for `contracts/*.sol`, `contracts/interfaces/*.sol`, and `contracts/libraries/*.sol`.
+2. Update this README for documentation and reproducability.
+
+# Acknowledgments
+- **Contributors**: See the [contributors page](https://github.com/Uniswap/v2-core/graphs/contributors) for a comprehensive list of everyone who contributed to the project.
+
+
+
 # Uniswap V2
 
 [![Actions Status](https://github.com/Uniswap/uniswap-v2-core/workflows/CI/badge.svg)](https://github.com/Uniswap/uniswap-v2-core/actions)
