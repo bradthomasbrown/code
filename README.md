@@ -1,3 +1,12 @@
+# Changes
+1. Removed everything except solidity files necessary to deploy a functioning UniversalRouter, LICENSE files, and README files.
+2. Updated this README for documentation and reproducability.
+
+# Acknowledgments
+- **Contributors**: See the [contributors page](https://github.com/Uniswap/v3-core/graphs/contributors) for a comprehensive list of everyone who contributed to the project.
+
+
+
 # Uniswap V3
 
 [![Lint](https://github.com/Uniswap/uniswap-v3-core/actions/workflows/lint.yml/badge.svg)](https://github.com/Uniswap/uniswap-v3-core/actions/workflows/lint.yml)
