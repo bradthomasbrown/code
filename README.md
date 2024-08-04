@@ -3,7 +3,7 @@
 The goal is to acquire the original WETH9 contract source code and trim to only what's necessary.
 
 ## Detailed Changes
-1. Removed everything except non-test solidity files, LICENSE files, and README files.
+1. Removed everything except solidity files necessary to deploy a functioning UniversalRouter, LICENSE files, and README files.
 2. Updated this README for documentation and reproducability.
 
 # Acknowledgments
