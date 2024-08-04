@@ -1,3 +1,13 @@
+# Changes Made
+1. checkout `v3.4.2-solc-0.7`
+2. Trimmed unnecessary files.
+3. Updated this README for documentation and reproducability.
+
+# Acknowledgments
+- **Contributors**: See the [contributors page](https://github.com/OpenZeppelin/openzeppelin-contracts/graphs/contributors) for a comprehensive list of everyone who contributed to the project.
+
+
+
 # <img src="logo.svg" alt="OpenZeppelin" height="40px">
 
 [![Docs](https://img.shields.io/badge/docs-%F0%9F%93%84-blue)](https://docs.openzeppelin.com/contracts)
