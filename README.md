@@ -3,8 +3,8 @@
 The goal is to acquire the original WETH9 contract source code and trim to only what's necessary.
 
 ## Detailed Changes
-1. Removed all files and directories except for `contracts/*.sol`, `contracts/interfaces/*.sol`, and `contracts/libraries/*.sol`.
-2. Update this README for documentation and reproducability.
+1. Removed everything except non-test solidity files, LICENSE files, and README files.
+2. Updated this README for documentation and reproducability.
 
 # Acknowledgments
 - **Contributors**: See the [contributors page](https://github.com/Uniswap/v2-core/graphs/contributors) for a comprehensive list of everyone who contributed to the project.
