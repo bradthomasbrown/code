@@ -1,3 +1,16 @@
+# Changes Made
+## Summary
+The goal is to acquire the original WETH9 contract source code and trim to only what's necessary.
+
+## Detailed Changes
+1. Removed everything except non-test solidity files, LICENSE files, and README files.
+2. Updated this README for documentation and reproducability.
+
+# Acknowledgments
+- **Contributors**: See the [contributors page](https://github.com/Uniswap/universal-router/graphs/contributors) for a comprehensive list of everyone who contributed to the project.
+
+
+
 # Universal Router
 
 Please read the [Contributions](https://github.com/Uniswap/universal-router#contributions) section before submitting a Pull Request.
