@@ -4,6 +4,7 @@ import { solcListObjectFromString } from '../schemas/_solcListObject.ts'
 import { solidityToSvRange } from './_solidityToSvRange.ts'
 import { SolcListObject } from '../types/_SolcListObject.ts';
 
+const defaultCache = new Cache(`${Deno.env.get('HOME')!}/.kaaos/solc`)
 
 export interface SolcList extends SolcListObject {}
 export class SolcList {
@@ -18,15 +19,14 @@ export class SolcList {
         const codeArray = typeof param0 == 'string' ? [param0] : param0
         const ranges:SV.Range[] = codeArray.map(solidityToSvRange)
         const versions:SV.SemVer[] = this.versions()
-        const version = SV.maxSatisfying(versions, ranges)
-        if (!version) throw new Error('no version satisfies code')
-        const versionStr = SV.format(version)
-        return [versionStr, this.releases[versionStr]]
+        const semver = SV.maxSatisfying(versions, ranges)
+        if (!semver) throw new Error('no version satisfies code')
+        const version = SV.format(semver)
+        return [version, this.releases[version]]
     }
 
-    static async get() {
+    static async get(cache=defaultCache) {
         const path = 'list.json'
-        const cache = new Cache(Deno.env.get('HOME')!)
         const retrieve = () => fetch('https://binaries.soliditylang.org/linux-amd64/list.json')
             .then(response => response.blob())
             .then(blob => cache.writeFile(path, blob.stream()))
