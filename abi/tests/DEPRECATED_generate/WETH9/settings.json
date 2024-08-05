@@ -1,12 +1,6 @@
 {
   "language": "Solidity",
-  "sources": {
-    "WETH9.sol": {
-      "urls": [
-        "WETH9.sol"
-      ]
-    }
-  },
+  "sources": { "WETH9.sol": { "urls": ["WETH9.sol"] } },
   "settings": {
     "outputSelection": {
       "WETH9.sol": {
