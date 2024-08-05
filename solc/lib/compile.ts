@@ -1,5 +1,5 @@
-import * as SV from '../../../std/semver/mod.ts'
 import { PipedCommand } from '../../../std/beno/PipedCommand.ts'
+import { Cache } from '../../../std/cache/Cache.ts';
 import { createSourceMap } from './_createSourceMap.ts'
 import { SolcList } from './_SolcList.ts'
 import { SolcRelease } from './_SolcRelease.ts'
@@ -14,7 +14,9 @@ export async function compile({
     excludePaths,
     remappings,
     optimizer={ enabled: false, runs: 0 },
-    viaIR
+    viaIR,
+    cacheDir,
+    excludeOpcodes
 }:{
     targets: Record<string, string[]>
     basePath?: string
@@ -22,24 +24,28 @@ export async function compile({
     excludePaths?: string[]
     remappings?: string[],
     optimizer?: { enabled: boolean, runs: number },
-    viaIR?: true
+    viaIR?: true,
+    cacheDir?: string,
+    excludeOpcodes?: string[]
 }) {
+
+    const cache = new Cache(cacheDir ?? defaultCacheDir)
 
     const requiredSources = Object.keys(targets)
     const sourceMap = await createSourceMap({ requiredSources, basePath, includePaths, excludePaths, remappings })
 
-    const solcList = await SolcList.get()
+    const solcList = await SolcList.get(cache)
     const codeArray = [...sourceMap.values()]
     const [version, release] = solcList.maxSatisfying(codeArray)
-    await SolcRelease.ensure(release)
+    await SolcRelease.ensure(release, cache)
 
     const language = 'Solidity'
     const sources = [...sourceMap.entries()].reduce<Record<string, { content: string }>>(
         (p, [source, content]) => (p[source] = { content }, p), {})
-    const evmVersion = getEvmVersion(version)
+    const evmVersion = getEvmVersion(version, excludeOpcodes)
     const outputSelection = Object.entries(targets).reduce<Record<string, Record<string, string[]>>>(
         (p, [source, contracts]) => (p[source] = contracts.reduce<Record<string, string[]>>(
-            (p, contract) => (p[contract] = ['abi', 'evm.bytecode.object', 'evm.bytecode.linkReferences'], p), {}), p), {})
+            (p, contract) => (p[contract] = ['abi', 'evm.bytecode.object', 'evm.bytecode.linkReferences', 'evm.bytecode.opcodes'], p), {}), p), {})
     const settings = { remappings, optimizer, evmVersion, outputSelection, viaIR }
     const solcJsonInput = { language, sources, settings }
     const solcJsonInputBytes = new TextEncoder().encode(JSON.stringify(solcJsonInput))
