@@ -1,6 +1,6 @@
 import { Cache } from '../../../std/cache/Cache.ts'
 import * as SV from '../../../std/semver/mod.ts'
-import { solcListObjectFromString } from '../schemas/_solcListObject.ts'
+import { solcList as solcListSchema } from '../schemas/_solcListObject.ts'
 import { solidityToSvRange } from './_solidityToSvRange.ts'
 import { SolcListObject } from '../types/_SolcListObject.ts';
 
@@ -32,7 +32,7 @@ export class SolcList {
             .then(blob => cache.writeFile(path, blob.stream()))
         const expire = 86400e3
         const solcListText = await cache.readTextFile({ path, expire, retrieve })
-        return new SolcList(solcListObjectFromString.parse(solcListText))
+        return new SolcList(solcListSchema.parse(solcListText))
     }
 
 }
