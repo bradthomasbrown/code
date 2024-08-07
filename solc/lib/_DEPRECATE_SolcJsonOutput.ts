@@ -1,4 +1,4 @@
-import { Abi } from '../../abi/lib/Abi.ts'
+import { Abi } from '../../igen/lib/_DEPRECATED_Abi.ts'
 import { SolcJsonOutputObject } from "../types/_SolcJsonOutputObject.ts";
 
 export class SolcJsonOutput {
