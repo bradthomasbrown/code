@@ -22,7 +22,7 @@ export class SolcList {
         const semver = SV.maxSatisfying(versions, ranges)
         if (!semver) throw new Error('no version satisfies code')
         const version = SV.format(semver)
-        return [version, this.releases[version]]
+        return [version, this.releases[version]!]
     }
 
     static async get(cache=defaultCache) {
