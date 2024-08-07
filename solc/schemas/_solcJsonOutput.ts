@@ -3,41 +3,48 @@ import { z } from 'https://deno.land/x/zod@v3.23.8/mod.ts'
 type FunctionFunctionDescriptorInputComponent = {
     name: string
     type: string
-    components: FunctionFunctionDescriptorInputComponent[]
+    components?: FunctionFunctionDescriptorInputComponent[]
+    internalType?: string
 }
 
 const functionFunctionDescriptorInputComponent: z.ZodType<FunctionFunctionDescriptorInputComponent> = z.object({
     name: z.string(),
     type: z.string(),
-    components: z.lazy(() => functionFunctionDescriptorInputComponent).array()
+    components: z.lazy(() => functionFunctionDescriptorInputComponent).array().optional(),
+    internalType: z.string().optional()
 }).strict()
 
 const functionFunctionDescriptorInput = z.object({
     name: z.string(),
     type: z.string(),
-    components: functionFunctionDescriptorInputComponent.array(),
+    components: functionFunctionDescriptorInputComponent.array().optional(),
+    internalType: z.string().optional()
 }).strict()
 
 type FunctionFunctionDescriptorOutputComponent = {
     name: string
     type: string
-    components: FunctionFunctionDescriptorOutputComponent[]
+    components?: FunctionFunctionDescriptorOutputComponent[]
+    internalType?: string
 }
 
 const functionFunctionDescriptorOutputComponent: z.ZodType<FunctionFunctionDescriptorOutputComponent> = z.object({
     name: z.string(),
     type: z.string(),
-    components: z.lazy(() => functionFunctionDescriptorOutputComponent).array()
+    components: z.lazy(() => functionFunctionDescriptorOutputComponent).array().optional(),
+    internalType: z.string().optional()
 }).strict()
 
 const functionFunctionDescriptorOutput = z.object({
     name: z.string(),
     type: z.string(),
-    components: functionFunctionDescriptorOutputComponent.array(),
+    components: functionFunctionDescriptorOutputComponent.array().optional(),
+    internalType: z.string().optional(),
 }).strict()
 
 const functionFunctionDescriptor = z.object({
     type: z.literal('function'),
+    name: z.string(),
     inputs: functionFunctionDescriptorInput.array(),
     outputs: functionFunctionDescriptorOutput.array(),
     stateMutability: z.union([
@@ -45,31 +52,37 @@ const functionFunctionDescriptor = z.object({
         z.literal('view'),
         z.literal('nonpayable'),
         z.literal('payable')
-    ])
+    ]),
+    constant: z.boolean().optional(),
+    payable: z.boolean().optional()
 }).strict()
 
 type ConstructorFunctionDescriptorInputComponent = {
     name: string
     type: string
-    components: ConstructorFunctionDescriptorInputComponent[]
+    components?: ConstructorFunctionDescriptorInputComponent[]
+    internalType?: string
 }
 
 const constructorFunctionDescriptorInputComponent: z.ZodType<ConstructorFunctionDescriptorInputComponent> = z.object({
     name: z.string(),
     type: z.string(),
-    components: z.lazy(() => constructorFunctionDescriptorInputComponent).array()
+    components: z.lazy(() => constructorFunctionDescriptorInputComponent).array().optional(),
+    internalType: z.string().optional()
 }).strict()
 
 const constructorFunctionDescriptorInput = z.object({
     name: z.string(),
     type: z.string(),
-    components: constructorFunctionDescriptorInputComponent.array(),
+    components: constructorFunctionDescriptorInputComponent.array().optional(),
+    internalType: z.string().optional()
 }).strict()
 
 const constructorFunctionDescriptor = z.object({
     type: z.literal('constructor'),
     inputs: constructorFunctionDescriptorInput.array(),
-    stateMutability: z.union([z.literal('nonpayable'), z.literal('payable')])
+    stateMutability: z.union([z.literal('nonpayable'), z.literal('payable')]),
+    payable: z.boolean().optional()
 }).strict()
 
 const receiveFunctionDescriptor = z.object({
@@ -79,7 +92,8 @@ const receiveFunctionDescriptor = z.object({
 
 const fallbackFunctionDescriptor = z.object({
     type: z.literal('fallback'),
-    stateMutability: z.union([z.literal('nonpayable'), z.literal('payable')])
+    stateMutability: z.union([z.literal('nonpayable'), z.literal('payable')]),
+    payable: z.boolean().optional()
 }).strict()
 
 const functionDescriptor = z.union([
@@ -92,20 +106,23 @@ const functionDescriptor = z.union([
 type EventDescriptorInputComponent = {
     name: string
     type: string
-    components: EventDescriptorInputComponent[]
+    components?: EventDescriptorInputComponent[]
+    internalType?: string
 }
 
 const eventDescriptorInputComponent: z.ZodType<EventDescriptorInputComponent> = z.object({
     name: z.string(),
     type: z.string(),
-    components: z.lazy(() => eventDescriptorInputComponent).array()
+    components: z.lazy(() => eventDescriptorInputComponent).array().optional(),
+    internalType: z.string().optional()
 }).strict()
 
 const eventDescriptorInput = z.object({
     name: z.string(),
     type: z.string(),
-    components: eventDescriptorInputComponent.array(),
-    indexed: z.boolean()
+    components: eventDescriptorInputComponent.array().optional(),
+    indexed: z.boolean(),
+    internalType: z.string().optional()
 }).strict()
 
 const eventDescriptor = z.object({
@@ -118,19 +135,22 @@ const eventDescriptor = z.object({
 type ErrorDescriptorInputComponent = {
     name: string
     type: string
-    components: ErrorDescriptorInputComponent[]
+    components?: ErrorDescriptorInputComponent[]
+    internalType?: string
 }
 
 const errorDescriptorInputComponent: z.ZodType<ErrorDescriptorInputComponent> = z.object({
     name: z.string(),
     type: z.string(),
-    components: z.lazy(() => errorDescriptorInputComponent).array()
+    components: z.lazy(() => errorDescriptorInputComponent).array().optional(),
+    internalType: z.string().optional()
 }).strict()
 
 const errorDescriptorInput = z.object({
     name: z.string(),
     type: z.string(),
-    components: errorDescriptorInputComponent.array()
+    components: errorDescriptorInputComponent.array().optional(),
+    internalType: z.string().optional()
 }).strict()
 
 const errorDescriptor = z.object({
