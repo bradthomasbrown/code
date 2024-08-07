@@ -189,8 +189,12 @@ const contracts = z.record(contract.optional())
 
 const sources = z.record(contracts.optional())
 
-export const solcJsonOutput = z.object({
+export const solcJsonOutputFromObject = z.object({
     errors: z.unknown(),
     sources: z.unknown(),
     contracts: sources
 }).partial().strict()
+
+const solcJsonOutputFromString = z.string().transform(s => solcJsonOutputFromObject.parse(JSON.parse(s)))
+
+export const solcJsonOutput = solcJsonOutputFromString.or(solcJsonOutputFromObject)
