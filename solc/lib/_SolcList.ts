@@ -11,7 +11,7 @@ export class SolcList {
 
     constructor(solcListObject:SolcListObject) { Object.assign(this, solcListObject) }
 
-    versions():SV.SemVer[] { return Object.keys(this.releases).map(SV.parse) }
+    versions():SV.SemVer[] { return [...this.releases.keys()].map(SV.parse) }
 
     maxSatisfying(code:string): [version:string, release:string]
     maxSatisfying(codeArray:string[]): [version:string, release:string]
@@ -22,7 +22,7 @@ export class SolcList {
         const semver = SV.maxSatisfying(versions, ranges)
         if (!semver) throw new Error('no version satisfies code')
         const version = SV.format(semver)
-        return [version, this.releases[version]!]
+        return [version, this.releases.get(version)!]
     }
 
     static async get(cache=defaultCache) {
