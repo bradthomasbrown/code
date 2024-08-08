@@ -192,7 +192,7 @@ const evm = z.object({
     gasEstimates: z.unknown()
 }).partial().strict()
 
-const contract = z.object({
+export const contract = z.object({
     abi: abi,
     metadata: z.unknown(),
     userdoc: z.unknown(),
@@ -205,7 +205,7 @@ const contract = z.object({
     evm: evm
 }).partial().strict()
 
-const source = z.record(z.string(), contract).transform(r => new Map(Object.entries(r)))
+export const source = z.record(z.string(), contract).transform(r => new Map(Object.entries(r)))
 
 const sources = z.record(z.string(), source).transform(r => new Map(Object.entries(r)))
 
