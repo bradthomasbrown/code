@@ -14,7 +14,7 @@ const builds = build.optional().array()
 
 export const solcListFromObject = z.object({
     builds: builds,
-    releases: z.record(z.string().optional()),
+    releases: z.record(z.string(), z.string()).transform(r => new Map(Object.entries(r))),
     latestRelease: z.string() 
 }).strict()
 
