@@ -152,7 +152,7 @@ export const errorDescriptor = z.object({
     inputs: errorDescriptorInput.array()
 }).strict()
 
-const abiDescriptor = z.union([
+export const descriptor = z.union([
     functionDescriptor, 
     eventDescriptor, 
     errorDescriptor, 
@@ -161,7 +161,7 @@ const abiDescriptor = z.union([
     receiveDescriptor
 ])
 
-const abi = abiDescriptor.array()
+const abi = descriptor.array()
 
 const linkReferenceByteOffset = z.object({
     start: z.number(),
