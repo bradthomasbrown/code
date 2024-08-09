@@ -8,12 +8,8 @@ import { FallbackDescriptor } from "../../solc/types/_FallbackDescriptor.ts";
 import { EventDescriptor } from "../../solc/types/_EventDescriptor.ts";
 import { ErrorDescriptor } from "../../solc/types/_ErrorDescriptor.ts";
 import { SolcJsonOutputSource as SourceX } from "../../solc/types/_SolcJsonOutputSource.ts";
-import jsSha3 from 'npm:js-sha3@0.9.2'
 import { SolcJsonOutputContract as ContractX } from "../../solc/types/_SolcJsonOutputContract.ts";
-import { resolve } from 'https://deno.land/std@0.224.0/path/resolve.ts';
-const { keccak256 } = jsSha3
-
-function getSelector(s:string) { return `0x${keccak256(s).slice(0, 8)}` }
+import { Descriptor } from '../../solc/types/_Descriptor.ts';
 
 type FunctionDescriptors = Map<string, FunctionDescriptor[]>
 
@@ -21,14 +17,7 @@ type EventDescriptors = Map<string, EventDescriptor[]>
 
 type ErrorDescriptors = Map<string, ErrorDescriptor[]>
 
-type ContractDescriptor = FunctionDescriptor
-    | EventDescriptor
-    | ErrorDescriptor
-    | ConstructorDescriptor
-    | ReceiveDescriptor
-    | FallbackDescriptor
-
-type ContractDescriptors = {
+type ContractYDescriptors = {
     functions: FunctionDescriptors,
     events: EventDescriptors
     errors: ErrorDescriptors
@@ -40,7 +29,7 @@ type ContractDescriptors = {
 type ContractY = {
     bytecode?: string
     linkReferences?: LinkReferences
-    descriptors: ContractDescriptors
+    descriptors: ContractYDescriptors
 }
 
 type SourceY = Map<string, ContractY>
@@ -54,9 +43,14 @@ export async function generate(output:SolcJsonOutputObject, root?:string) {
     const mapMapValue = <K, X, Y>(map: Map<K, X>, mapper: (x: X) => Y): Map<K, Y> =>
         new Map([...map.entries()].map(([k, x]) => [k, mapper(x)]))
 
-    function updateDescriptors(descriptors: ContractDescriptors, descriptor: ContractDescriptor) {
+    function mapType(type:string) {
+        if (true) return 'unknown'
+        throw new Error('unhandled mapType', { cause: type })
+    }
+
+    function updateDescriptors(descriptors: ContractYDescriptors, descriptor: Descriptor) {
         const { functions, events, errors } = descriptors
-        if (descriptor.type == 'function') functions.set(descriptor.name, [...functions.get(descriptor.name) ?? [], descriptor])
+        if (!descriptor.type || descriptor.type == 'function') functions.set(descriptor.name, [...functions.get(descriptor.name) ?? [], descriptor])
         else if (descriptor.type == 'event') events.set(descriptor.name, [...events.get(descriptor.name) ?? [], descriptor])
         else if (descriptor.type == 'error') errors.set(descriptor.name, [...errors.get(descriptor.name) ?? [], descriptor])
         else if (descriptor.type == 'constructor') descriptors.construct = descriptor
@@ -68,34 +62,122 @@ export async function generate(output:SolcJsonOutputObject, root?:string) {
         const bytecode = contractX.evm?.bytecode?.object
         const linkReferences = contractX.evm?.bytecode?.linkReferences
         const functions = new Map(), events = new Map(), errors = new Map()
-        const descriptors: ContractDescriptors = { functions, events, errors }
+        const descriptors: ContractYDescriptors = { functions, events, errors }
         for (const descriptor of contractX?.abi ?? []) updateDescriptors(descriptors, descriptor)
         return { bytecode, linkReferences, descriptors }
     }
 
     const mapSource = (sourceX: SourceX): SourceY => mapMapValue(sourceX, mapContract)
 
-    async function buildInputlessFunctionEncoder(name: string, root: string) {
-        const selector = getSelector(`${name}()`)
-        await Deno.writeTextFile(`${root}/encode.ts`, `export function encode():'${selector}' { return '${selector}' }`)
-        // TODO: writing to any mod.ts probably shouldn't happen here
-        await Deno.writeTextFile(`${root}/mod.ts`, `export { encode } from './encode.ts'`)
-        await Deno.writeTextFile(resolve(root, '../mod.ts'), `export * as ${name} from './${name}/mod.ts'\n`, { append: true })
+    async function buildReceive(_descriptor: ReceiveDescriptor, root: string) {
+        await Deno.mkdir(`${root}/receive`)
+    }
+
+    async function buildFallback(_descriptor: FallbackDescriptor, root: string) {
+        await Deno.mkdir(`${root}/fallback`)
+    }
+
+    async function buildConstructor(_descriptor: ConstructorDescriptor, root: string) {
+        await Deno.mkdir(`${root}/construct`)
+    }
+
+    async function buildError(name: string, _descriptors: ErrorDescriptor[], root: string) {
+        const dir = `${root}/${name}`
+        await Deno.mkdir(dir)
+    }
+
+    async function buildEvent(name: string, _descriptors: EventDescriptor[], root: string) {
+        const dir = `${root}/${name}`
+        await Deno.mkdir(dir)
     }
 
     async function buildFunction(name: string, descriptors: FunctionDescriptor[], root: string) {
+    
         const dir = `${root}/${name}`
-        await Deno.mkdir(dir, { recursive: true })
-        if (descriptors.every(({ inputs }) => !inputs.length)) await buildInputlessFunctionEncoder(name, dir)
+        await Deno.mkdir(dir)
+
+        await Deno.writeTextFile(`${dir}/inputs.ts`, 'export function inputs() {}')
+
+        await Deno.writeTextFile(`${dir}/selector.ts`, `export function selector(parameters:unknown) {}`)
+
+        async function buildEncoder() {
+
+            const imports = 
+                `${`import { defaultAbiEncode } from '../../../../../../../lib/_defaultAbiEncode.ts'\n`
+                }${`import { inputs } from './inputs.ts'\n`
+                }${`import { selector } from './selector.ts'`}`
+
+            const types = ''
+
+            let overloadSignatures = ''
+            if (descriptors.length == 1) {
+                const [descriptor] = descriptors
+                if (!descriptor.inputs.length) {
+                    // NOOP
+                } else if (descriptor.inputs.every(({ name }) => name)) {
+                    const mapTypedParameters = descriptor.inputs.map(input => `${input.name}:${mapType(input.type)}`)
+                    const parameterNames = descriptor.inputs.map(({ name }) => name).join()
+                    overloadSignatures +=
+                        `${`export function encode(${mapTypedParameters}): string\n`
+                        }${`export function encode({${parameterNames}}:{${mapTypedParameters}}): string`}`
+                } else {
+                    // NOOP
+                }
+            } else {
+                // TODO
+            }
+
+            let implementationSignature = ''
+            if (descriptors.length == 1) {
+                const [descriptor] = descriptors
+                if (!descriptor.inputs.length) {
+                    implementationSignature =
+                        `export function encode(...parameters: []): string`
+                } else if (descriptor.inputs.every(({ name }) => name)) {
+                    const mapTypedParameters = descriptor.inputs.map(input => `${input.name}:${mapType(input.type)}`)
+                    implementationSignature =
+                        `export function encode(...parameters: [${mapTypedParameters}]|[{${mapTypedParameters}}]): string`
+                } else {
+                    const mappedTypes = descriptor.inputs.map(({ type }) => type).map(mapType).join()
+                    implementationSignature +=
+                        `export function encode(...parameters: [${mappedTypes}]): string`
+                }
+            } else {
+                implementationSignature +=
+                    `export function encode(...parameters:unknown[]): string`
+            }
+
+            const signatures = 
+                `${overloadSignatures ? `${overloadSignatures}\n` : ''
+                }${implementationSignature}`
+
+            const implementation = '{ return `0x${selector(parameters)}${defaultAbiEncode(parameters, inputs)}` }'
+
+            const content =
+                `${`${imports}\n\n`
+                }${types ? `${types}\n\n` : ''
+                }${`${signatures} `
+                }${implementation}`
+
+            await Deno.writeTextFile(`${dir}/encode.ts`, content)
+
+        }
+
+        await buildEncoder()
+
     }
 
     async function buildContract(name: string, contract: ContractY, root: string) {
-        const { bytecode, descriptors: { functions } } = contract
+        const { bytecode, descriptors: { functions, events, errors, construct, fallback, receive } } = contract
         const dir = `${root}/${name.replace(/^I?/, 'I')}`
         await Deno.mkdir(dir)
         if (bytecode) await Deno.writeTextFile(`${dir}/bytecode.ts`, `export const bytecode = '${bytecode}'`)
-        // await Deno.writeTextFile(`${contractDir}/mod.ts`, `export * from './bytecode.ts'`, { append: true })
-        for (const entry of [...functions.entries()]) buildFunction(...entry, dir)
+        for (const entry of [...functions.entries()]) await buildFunction(...entry, dir)
+        for (const entry of [...events.entries()]) await buildEvent(...entry, dir)
+        for (const entry of [...errors.entries()]) await buildError(...entry, dir)
+        if (construct) await buildConstructor(construct, dir)
+        if (fallback) await buildFallback(fallback, dir)
+        if (receive) await buildReceive(receive, dir)
     }
 
     async function buildSource(name: string, source: SourceY) {
