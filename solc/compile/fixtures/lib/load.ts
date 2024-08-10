@@ -1,4 +1,4 @@
-import { cache } from 'solc/output/fixtures/lib/cache.ts'
+import { cache } from "solc/compile/fixtures/lib/cache.ts"
 
 export async function load(name:string, compile:()=>Promise<string>) {
     const path = `${name}.json`
