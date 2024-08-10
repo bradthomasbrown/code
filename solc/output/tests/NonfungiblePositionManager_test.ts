@@ -1,6 +1,6 @@
 import { output as outputSchema } from 'solc/output/schemas/mod.ts';
-import { load } from 'solc/output/fixtures/lib/load.ts'
-import { compile } from "solc/compile/tests/NonfungiblePositionManager/compile.ts"
+import { load } from "solc/compile/fixtures/lib/load.ts"
+import { compile } from "solc/compile/tests/lib/NonfungiblePositionManager_compile.ts"
 
 const outputString = await load('NonfungiblePositionManager', compile)
 
