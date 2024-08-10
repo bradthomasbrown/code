@@ -2,8 +2,8 @@ import { PipedCommand } from 'std/beno/PipedCommand.ts'
 import { Cache } from 'std/cache/Cache.ts';
 import { List } from "solc/List/lib/mod.ts"
 import { Release } from "solc/Release/lib/mod.ts"
-import { createSourceMap } from "solc/compile/lib/createSourceMap.ts"
-import { getEvmVersion } from "solc/compile/lib/getEvmVersion.ts"
+import { createSourceMap } from "solc/compile/lib/_createSourceMap.ts"
+import { getEvmVersion } from "solc/compile/lib/_getEvmVersion.ts"
 
 const defaultCacheDir = `${Deno.env.get('HOME')!}/.kaaos/solc`
 
