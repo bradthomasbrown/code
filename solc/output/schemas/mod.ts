@@ -1,0 +1,1 @@
+export { output } from "solc/output/schemas/stringToOutput.ts"

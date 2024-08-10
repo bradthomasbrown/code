@@ -1,0 +1,1 @@
+export { component as input } from "solc/output/schemas/sources/contract/descriptor/~component.ts"
