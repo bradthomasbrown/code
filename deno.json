@@ -1,0 +1,15 @@
+{
+    "fmt": {
+        "options": {
+            "singleQuote": true,
+            "indentWidth": 4,
+            "useTabs": false
+        }
+    },
+    "imports": {
+        "solc/": "./solc/",
+        "fixtures/": "./fixtures/",
+        "igen/": "./igen/",
+        "std/": "../std/"
+    }
+}
