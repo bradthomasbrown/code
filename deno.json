@@ -9,7 +9,7 @@
     "imports": {
         "solc/": "./solc/",
         "fixtures/": "./fixtures/",
-        "igen/": "./igen/",
+        "generate/": "./generate/",
         "std/": "../std/"
     }
 }
