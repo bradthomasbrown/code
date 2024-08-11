@@ -27,7 +27,12 @@ export class Cache {
     async writeFile(path: string, data: Uint8Array | ReadableStream<Uint8Array>) {
         await this.#ensureCacheDirExists()
         return await Deno.writeFile(`${this.root}/${path}`, data)
-    } 
+    }
+
+    async writeTextFile(path: string, dataString: string) {
+        const dataBytes = new TextEncoder().encode(dataString)
+        await this.writeFile(path, dataBytes)
+    }
 
     async #ensureCacheDirExists() {
         const fileInfo = await Deno.stat(this.root).catch(() => undefined)
