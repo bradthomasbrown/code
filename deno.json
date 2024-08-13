@@ -1,5 +1,7 @@
 {
     "imports": {
-        "ChildProcess/": "./ChildProcess/"
+        "ChildProcess/": "./ChildProcess/",
+        "map/": "./map/",
+        "fp/": "./fp/"
     }
 }
