@@ -86,12 +86,9 @@ export class ExtendedMap<Ka, Va> extends Map<Ka, Va> {
         return m1
     }
 
-    foldMapWithKey<T>(M: () => Kind<'Monoid', T>) {
-        let mon = M()
-        return (f: (k: Ka, v: Va) => Kind<'Monoid', T>) => {
-            for (const [k, v] of this) mon = mon.mappend(f(k, v))
-            return mon
-        }
+    foldMapWithKey<T>(mCtor: MonoidConstructor<T>, ...mCtorParams:T[]) {
+        return (f: (k: Ka, v: Va) => MonoidInterface<T>) =>
+            this.foldrWithKey((k, v, m) => m = m.mappend(f(k, v)), new mCtor(...mCtorParams))
     }
 
 }
@@ -134,11 +131,26 @@ const faz = <K, A>(k: K, a: A) => {
 
 // const boo = createMonoid(MonoidSum)
 
-const baz = () => createMonoid<unknown[]>(MonoidList)
+const baz = createMonoid<string[][]>(MonoidList)
 
 // console.log(faz('f', 'b'))
 
-const bar = foo.foldMapWithKey(() => createMonoid<string[][]>(MonoidList))((k, a) =>
-    createMonoid(MonoidList, a.foldrWithKey<[string, string][]>((l, _, b) => (b.push([k, l]), b), [])))
+// const bar = foo.foldMapWithKey<string[][]>(MonoidList, [])((k, a) =>
+//     createMonoid(MonoidList, a.foldrWithKey<[string, string][]>((l, _, b) => (b.push([k, l]), b), [])))
+const bar = foo.foldMapWithKey<string[][]>(MonoidList, [])((k, v) =>
+    v.foldrWithKey((l, _, m) =>
+        m.mappend(createMonoid<string[][]>(MonoidList, [[k, l]])),
+        createMonoid<string[][]>(MonoidList)))
 
-console.log({ foo, bar })
+
+// outer map foldMapWithKey, tell it the monoid type, then give it the monoid class and init value
+// then give it a function f that will operator over every k v and return m.mappend(f(k, v)))
+// except here, v is the inner map, so we foldMapWith key that as well, giving it the monoid type then class and init
+// then give it a function g that will operate over every k v of the inner map and return m.mappend(f(k, v))
+// and so this function just needs to create a monoid, same type then class but the init is where we do our logic
+// for that last one, we don't need to give it a type, it is inferred from the init [[k, l]]
+const boo = foo.foldMapWithKey<string[][]>(MonoidList, [])((k, v) =>
+    v.foldMapWithKey<string[][]>(MonoidList, [])(l =>
+        createMonoid(MonoidList, [[k, l]])))
+
+console.log({ foo, bar, boo })

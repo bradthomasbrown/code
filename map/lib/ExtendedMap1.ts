@@ -8,7 +8,7 @@ interface MonoidInterface<A> {
     mempty: A
     value: A | undefined
     mappend(a: MonoidInterface<A>): MonoidInterface<A>
-}   
+}
 
 function createMonoid<A>(ctor: MonoidConstructor<A>, ...parameters: A[]): MonoidInterface<A> {
     return new ctor(...parameters)
@@ -46,9 +46,11 @@ export class ExtendedMap1<K0, V0 extends ExtendedMap<K1, V1>, K1 = MapKey<V0>, V
         super(...parameters)
     }
 
-    foldMapsWithKeys<T>(M: (...v:T[]) => Kind<'Monoid', T>) {
-        return (f: (k0: K0, v0: V0, k1: K1, v1: V1, m: Kind<'Monoid', T>) => Kind<'Monoid', T>) =>
-            this.foldMapWithKey(M)((k0, v0) => v0.foldrWithKey((k1, v1, m) => m.mappend(f(k0, v0, k1, v1, m)), M()))
+    foldMap1WithKeys<T>(mCtor: MonoidConstructor<T>, ...mCtorParams:T[]) {
+        return (f: (k0: K0, v0: V0, k1: K1, v1: V1) => MonoidInterface<T>) =>
+            this.foldMapWithKey(mCtor, ...mCtorParams)((k0, v0) =>
+                v0.foldMapWithKey(mCtor, ...mCtorParams)((k1, v1) =>
+                    f(k0, v0, k1, v1)))
     }
 
 }
@@ -68,5 +70,8 @@ type Foo = typeof foo
 type MapKey<T> = T extends Map<infer K, infer V> ? K : never
 type MapValue<T> = T extends Map<infer K, infer V> ? V : never
 
-const bar = (...v:[string, string][][]) => createMonoid<[string, string][]>(MonoidList, ...v)
-const baz = foo.foldMapsWithKeys(bar)((k0, _v0, k1, _v1, m) => m.mappend(bar([[k0, k1]])))
+const bar = createMonoid<[string, string][]>(MonoidList)
+const baz = foo.foldMap1WithKeys<[string, string][]>(MonoidList)((k0, _v0, k1, _v1) =>
+    createMonoid(MonoidList, [[k0, k1] as [string, string]]))
+
+console.log({ baz })
