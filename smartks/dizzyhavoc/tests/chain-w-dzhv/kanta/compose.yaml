@@ -1,0 +1,4 @@
+services:
+  kanta:
+    image: kanta
+    entrypoint: deno run -A serve.ts
