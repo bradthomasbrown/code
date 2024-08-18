@@ -13,6 +13,8 @@ export class ExitHandlers {
             this.execute()
         })
         Deno.addSignalListener('SIGINT', this.execute)
+        Deno.addSignalListener('SIGUSR1', this.execute)
+        Deno.addSignalListener('SIGUSR2', this.execute)
         Deno.addSignalListener('SIGTERM', this.execute)
         ExitHandlers.#instance = this
     }
