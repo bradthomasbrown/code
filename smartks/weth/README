@@ -1,0 +1,13 @@
+# Changes Made
+## Summary
+The goal is to acquire the original WETH9 contract source code and trim to only what's necessary.
+
+## Detailed Changes
+1. `git checkout abb410d` to get to the latest commit prior to the deployment of the WETH9 contract on the Ethereum Mainnet (tx hash 0xb95343413e459a0f97461812111254163ae53467855c0d73e0f1e7c5b8442fa3).
+2. Renamed the WETH9 contract name from `WETH9_` to `WETH9` to match the [verified source code on etherscan](https://etherscan.io/address/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2#code). This appears to be the only difference.
+3. Removed all files and directories except for `src/weth9.sol`. I will be using a different build process to compile the WETH9 contract.
+4. Add the [most recent license file](https://github.com/dapphub/ds-weth/blob/8c819e024a8290e43712594302b51974d7d0df63/LICENSE).
+5. Add this README for documentation and reproducability.
+
+# Acknowledgments
+- **Contributors**: See the [contributors page](https://github.com/dapphub/ds-weth/graphs/contributors) for a comprehensive list of everyone who contributed to the project.
