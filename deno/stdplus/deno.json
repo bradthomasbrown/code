@@ -1,0 +1,7 @@
+{
+    "imports": {
+        "ChildProcess/": "./ChildProcess/",
+        "map/": "./map/",
+        "fp/": "./fp/"
+    }
+}
