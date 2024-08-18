@@ -1,0 +1,5 @@
+deno.lock
+**/build/**
+**/fixtures/**
+!**/fixtures/lib/
+!**/fixtures/lib/**
