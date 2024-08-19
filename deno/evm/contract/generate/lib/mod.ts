@@ -1,8 +1,6 @@
-import { Input } from 'igen/generate/input/types/Input.ts'
+import { Sources } from '../../../solc/output/types/Sources.ts'
 
-async function generate(input:Input): Promise<void> {
-
-    if (!input.contracts) return
+async function generate(sources: Sources): Promise<void> {
 
     
 
