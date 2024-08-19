@@ -1,1 +1,0 @@
-export function encode(...parameters:[]): string { return `0x${selector(parameters)}${defaultAbiEncode(parameters, inputs)}` }
