@@ -1,1 +1,1 @@
-export { list } from "solc/List/schemas/stringToList.ts"
+export { list } from './stringToList.ts'

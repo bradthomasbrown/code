@@ -1,4 +1,4 @@
-import { ChildProcess } from "ChildProcess/lib/mod.ts";
+import { ChildProcess } from "../../child-process/lib/mod.ts";
 
 export class PipedCommand extends Deno.Command {
 

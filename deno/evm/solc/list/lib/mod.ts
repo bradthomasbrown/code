@@ -1,8 +1,8 @@
-import { Cache } from '../../../../stdplus/Cache/lib/mod.ts'
+import { Cache } from '../../../../stdplus/cache/lib/mod.ts'
 import * as SV from '../../../../stdplus/semver/lib/mod.ts'
 import { solidityToSvRange } from "./solidityToSvRange.ts"
 import { List as ListObject } from "../types/List.ts"
-import { list as listSchema } from "../schemas/mod.ts"
+import { list as listSchema } from '../schemas/mod.ts'
 
 export interface List extends ListObject {}
 export class List {

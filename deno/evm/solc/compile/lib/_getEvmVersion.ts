@@ -1,4 +1,4 @@
-import * as SV from 'std/semver/mod.ts'
+import * as SV from '../../../../stdplus/semver/lib/mod.ts'
 
 export function getEvmVersion(version:string, excludeOpcodes?:string[]) {
     const semver = SV.parse(version)

@@ -1,5 +1,5 @@
 import { z } from 'https://deno.land/x/zod@v3.23.8/mod.ts'
-import { builds } from "solc/List/schemas/~builds.ts"
+import { builds } from "./builds.ts"
 
 export const list = z.object({
     builds: builds,
