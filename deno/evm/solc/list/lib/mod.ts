@@ -23,7 +23,7 @@ export class List {
         return [version, this.releases.get(version)!]
     }
 
-    static async get(cache=defaultCache) {
+    static async get(cache: Cache) {
         const path = 'list.json'
         const retrieve = () => fetch('https://binaries.soliditylang.org/linux-amd64/list.json')
             .then(response => response.blob())
