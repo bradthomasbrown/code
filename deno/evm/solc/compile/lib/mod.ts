@@ -1,11 +1,10 @@
-import { PipedCommand } from 'std/beno/PipedCommand.ts'
-import { Cache } from 'std/cache/Cache.ts';
-import { List } from "solc/List/lib/mod.ts"
-import { Release } from "solc/Release/lib/mod.ts"
-import { createSourceMap } from "solc/compile/lib/_createSourceMap.ts"
-import { getEvmVersion } from "solc/compile/lib/_getEvmVersion.ts"
-
-const defaultCacheDir = `${Deno.env.get('HOME')!}/.kaaos/solc`
+import { PipedCommand } from '../../../../stdplus/piped-command/lib/mod.ts'
+import { Cache } from '../../../../stdplus/cache/lib/mod.ts';
+import { List } from '../../list/lib/mod.ts'
+import { Release } from '../../release/lib/mod.ts'
+import { createSourceMap } from './_createSourceMap.ts'
+import { getEvmVersion } from './_getEvmVersion.ts'
+import { Params } from '../types/Parameters.ts';
 
 export async function compile({
     targets,
@@ -15,21 +14,11 @@ export async function compile({
     remappings,
     optimizer={ enabled: false, runs: 0 },
     viaIR,
-    cacheDir,
+    cacheDir=`${Deno.env.get('HOME')!}/.deno-evm/solc`,
     excludeOpcodes
-}:{
-    targets: Record<string, string[]>
-    basePath?: string
-    includePaths?: string[]
-    excludePaths?: string[]
-    remappings?: string[],
-    optimizer?: { enabled: boolean, runs: number },
-    viaIR?: true,
-    cacheDir?: string,
-    excludeOpcodes?: string[]
-}) {
+}: Params) {
 
-    const cache = new Cache(cacheDir ?? defaultCacheDir)
+    const cache = new Cache(cacheDir)
 
     const requiredSources = Object.keys(targets)
     const sourceMap = await createSourceMap({ requiredSources, basePath, includePaths, excludePaths, remappings })
@@ -50,7 +39,7 @@ export async function compile({
     const input = { language, sources, settings }
     const inputBytes = new TextEncoder().encode(JSON.stringify(input))
 
-    const proc = new PipedCommand(`${defaultCacheDir}/${release}`, { args: ['--standard-json'] }).spawn()
+    const proc = new PipedCommand(`${cacheDir}/${release}`, { args: ['--standard-json'] }).spawn()
     await proc.writeAndClose(inputBytes)
     const cmdOut = await proc.output()
 
