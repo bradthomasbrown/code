@@ -1,3 +1,13 @@
-import { compile } from "solc/compile/tests/lib/WETH9_compile.ts"
+import { compile } from '../lib/mod.ts'
+import { Params } from '../types/Parameters.ts'
+import { wrapImportMeta as w } from '../../../../stdplus/path/lib/wrapImportMeta.ts'
 
-Deno.test('compile', async () => { await compile() })
+const i = w(import.meta)
+const k = i`smartks/`
+
+export const params: Params = {
+    targets: { 'weth9.sol': ['WETH9'] },
+    basePath: k`weth/src`
+}
+
+Deno.test('compile WETH9', async () => { await compile(params) })
