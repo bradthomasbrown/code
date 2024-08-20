@@ -1,3 +1,3 @@
-import { byteOffset } from "solc/output/schemas/sources/contract/~byteOffset.ts"
+import { byteOffset } from "./~byteOffset.ts"
 
 export const byteOffsets = byteOffset.array()

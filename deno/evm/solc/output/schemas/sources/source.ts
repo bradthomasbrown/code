@@ -1,1 +1,1 @@
-export { contracts as source } from "solc/output/schemas/sources/contracts.ts"
+export { contracts as source } from "./contracts.ts"

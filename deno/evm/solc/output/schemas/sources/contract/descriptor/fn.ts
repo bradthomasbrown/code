@@ -1,5 +1,5 @@
 import { z } from 'https://deno.land/x/zod@v3.23.8/mod.ts'
-import { input, output } from "solc/output/schemas/sources/contract/descriptor/mod.ts"
+import { input, output } from "./mod.ts"
 
 export const fn = z.object({
     type: z.literal('function').or(z.undefined()),

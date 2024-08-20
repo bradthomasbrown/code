@@ -1,1 +1,1 @@
-export { output } from "solc/output/schemas/stringToOutput.ts"
+export { output } from "./stringToOutput.ts"

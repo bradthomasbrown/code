@@ -1,5 +1,5 @@
 import { z } from 'https://deno.land/x/zod@v3.23.8/mod.ts'
-import { bytecode } from "solc/output/schemas/sources/contract/~bytecode.ts"
+import { bytecode } from "./~bytecode.ts"
 
 export const evm = z.object({
     assembly: z.unknown(),

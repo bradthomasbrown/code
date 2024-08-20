@@ -1,6 +1,6 @@
 import { z } from 'https://deno.land/x/zod@v3.23.8/mod.ts'
-import { abi } from "solc/output/schemas/sources/contract/abi.ts"
-import { evm } from "solc/output/schemas/sources/contract/evm.ts"
+import { abi } from "./abi.ts"
+import { evm } from "./evm.ts"
 
 export const contract = z.object({
     abi: abi,
