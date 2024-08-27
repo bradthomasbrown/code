@@ -1,6 +1,6 @@
 import { encode } from 'npm:@ethereumjs/rlp@5.0.1'
-import * as e from '../ejra/mod.ts'
-import Signer from './Signer.ts'
+import * as e from '../jra/mod.ts'
+import { Signer } from './Signer.ts'
 import jsSha3 from 'npm:js-sha3@0.9.2'
 import { hexToBytes } from 'npm:@noble/hashes@1.3.3/utils'
 const { keccak256 } = jsSha3
@@ -35,7 +35,7 @@ type Opts = {
     signer:Signer
     code:string
     url:string
-    chainId:bigint
+    chainId:number
     nonce:bigint
     gasPrice:bigint
     gasLimit:bigint
