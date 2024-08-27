@@ -1,4 +1,4 @@
-import { Signer } from '../../Signer.ts'
+import { Signer } from '../../lib/Signer.ts'
 
 export async function createGenesis(signers:Signer[], chainId:number, dest:string) {
 

@@ -1,4 +1,4 @@
-import { Json } from './json.ts';
+import { Json } from './types/Json.ts';
 import * as jra from './mod.ts'
 
 function replacer(_key:unknown, value:unknown) {

@@ -1,4 +1,4 @@
-import { MonoidInterface } from "fp/types/MonoidInterface.ts";
+import { MonoidInterface } from "../../fp/types/MonoidInterface.ts";
 
 export class ExtendedMap<K0, V0> extends Map<K0, V0> {
 

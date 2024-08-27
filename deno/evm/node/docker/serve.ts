@@ -1,5 +1,5 @@
 import { geth } from './geth.ts'
-import { Signer } from '../../Signer.ts'
+import { Signer } from '../../lib/Signer.ts'
 
 const secret = ''.padEnd(64, 'A')
 const keyPath = Deno.makeTempFileSync()

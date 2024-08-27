@@ -6,7 +6,7 @@
 // once prepared (which is done in a RUN statement in a dockerfile),
 // geth can be run in one command (which is done in an ENTRYPOINT and/or CMD statement in a dockerfile)
 
-import { Signer } from '../../Signer.ts'
+import { Signer } from '../../lib/Signer.ts'
 import { gethup } from './gethup.ts'
 import { createGenesis } from './createGenesis.ts'
 import { gethInit } from './gethInit.ts'
