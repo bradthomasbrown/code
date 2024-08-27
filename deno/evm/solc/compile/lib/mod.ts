@@ -14,19 +14,33 @@ export async function compile({
     remappings,
     optimizer={ enabled: false, runs: 0 },
     viaIR,
-    cacheDir=`${Deno.env.get('HOME')!}/.deno-evm/solc`,
-    excludeOpcodes
+    cacheDir,
+    excludeOpcodes,
+    solcPath,
 }: Params) {
 
-    const cache = new Cache(cacheDir)
 
     const requiredSources = Object.keys(targets)
     const sourceMap = await createSourceMap({ requiredSources, basePath, includePaths, excludePaths, remappings })
 
-    const list = await List.get(cache)
-    const codeArray = [...sourceMap.values()]
-    const [version, release] = list.maxSatisfying(codeArray)
-    await Release.ensure(release, cache)
+    let version: string
+    if (!solcPath) {
+        cacheDir ??= `${Deno.env.get('HOME')!}/.deno-evm/solc`
+        const cache = new Cache(cacheDir)
+        const list = await List.get(cache)
+        const codeArray = [...sourceMap.values()]
+        const vr = list.maxSatisfying(codeArray)
+        version = vr[0]
+        const release = vr[1]
+        await Release.ensure(release, cache)
+        solcPath = `${cacheDir}/${release}`
+    } else {
+        const proc = new PipedCommand(solcPath, { args: ['--version'] }).spawn()
+        const cmdOut = await proc.output()
+        const match = cmdOut.stdoutText.match(/Version: (\d+.\d+.\d+)/)?.[1]
+        if (!match) throw new Error('could not get version from given solcPath')
+        version = match
+    }
 
     const language = 'Solidity'
     const sources = [...sourceMap.entries()].reduce<Record<string, { content: string }>>(
@@ -34,12 +48,12 @@ export async function compile({
     const evmVersion = getEvmVersion(version, excludeOpcodes)
     const outputSelection = Object.entries(targets).reduce<Record<string, Record<string, string[]>>>(
         (p, [source, contracts]) => (p[source] = contracts.reduce<Record<string, string[]>>(
-            (p, contract) => (p[contract] = ['abi', 'evm.bytecode.object', 'evm.bytecode.linkReferences', 'evm.bytecode.opcodes'], p), {}), p), {})
+            (p, contract) => (p[contract] = ['abi', 'evm.bytecode.object', 'evm.bytecode.linkReferences', 'evm.bytecode.opcodes'], p), { ['']: ['ast'] }), p), {})
     const settings = { remappings, optimizer, evmVersion, outputSelection, viaIR }
     const input = { language, sources, settings }
     const inputBytes = new TextEncoder().encode(JSON.stringify(input))
 
-    const proc = new PipedCommand(`${cacheDir}/${release}`, { args: ['--standard-json'] }).spawn()
+    const proc = new PipedCommand(solcPath, { args: ['--standard-json'] }).spawn()
     await proc.writeAndClose(inputBytes)
     const cmdOut = await proc.output()
 
