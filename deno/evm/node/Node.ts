@@ -2,9 +2,10 @@ import jsSha3 from 'npm:js-sha3@0.9.2'
 const { keccak256 } = jsSha3
 import { encode } from 'npm:@ethereumjs/rlp@5.0.1'
 import { hexToBytes } from 'npm:@noble/hashes@1.3.3/utils'
-import { Docker } from 'https://cdn.jsdelivr.net/gh/bradbrown-llc/docker@0.0.4/mod.ts'
-import { ExitHandlers } from 'https://cdn.jsdelivr.net/gh/bradbrown-llc/exit-handlers@0.0.1/mod.ts'
-import { Signer, ejra } from '../mod.ts'
+import { Docker } from '../../docker/Docker.ts'
+import { ExitHandlers } from '../../stdplus/exit-handlers/ExitHandlers.ts'
+import { Signer } from '../lib/Signer.ts'
+import * as ejra from '../jra/mod.ts'
 const { methods } = ejra
 type Tag = ejra.types.Tag
 type TxCallObject = ejra.types.TxCallObject
@@ -18,7 +19,7 @@ async function defaultWaitFn(node:Node, hash:string) {
     while (true) {
         const receipt = await node.receipt(hash)
         if (receipt) return
-        if (Date.now() - start >= timeout) throw new Error('w4_defaultWaitFn timeout')
+        if (Date.now() - start >= timeout) throw new Error('evm-node_defaultWaitFn timeout')
         await new Promise(r => setTimeout(r, interval))
     }
 }
@@ -26,6 +27,7 @@ async function defaultWaitFn(node:Node, hash:string) {
 export class Node {
 
     rpc:string
+    root:Signer
     balance:(address:string,tag:Tag)=>ReturnType<typeof methods.balance>
     call:(txCallObject:TxCallObject, tag:Tag)=>ReturnType<typeof methods.call>
     chainId:()=>ReturnType<typeof methods.chainId>
@@ -43,6 +45,7 @@ export class Node {
 
     constructor(rpc:string) {
         this.rpc = rpc
+        this.root = new Signer({ secret: ''.padEnd(64, 'A') })
         this.balance = (address:string, tag:Tag) => methods.balance(rpc, address, tag)
         this.call = (txCallObject:TxCallObject, tag:Tag) => methods.call(rpc, txCallObject, tag)
         this.chainId = () => methods.chainId(rpc)
@@ -82,7 +85,7 @@ export class Node {
 
     static async make(exitHandlers:ExitHandlers) {
 
-        const id = await Docker.run('w4-node', exitHandlers)
+        const id = await Docker.run('evm-node', exitHandlers)
         const inspection = await Docker.inspect(id)
         const ip = inspection.NetworkSettings.IPAddress
         const rpc = `http://${ip}`
