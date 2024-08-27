@@ -12,5 +12,6 @@ export type Params = {
     optimizer?: { enabled: boolean, runs: number }
     viaIR?: true
     cacheDir?: string
-    excludeOpcodes?: string[]
+    excludeOpcodes?: string[],
+    solcPath?: string
 }
