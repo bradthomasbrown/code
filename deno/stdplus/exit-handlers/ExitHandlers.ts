@@ -20,12 +20,12 @@ export class ExitHandlers {
     }
 
     execute() {
-        this.#handlers.forEach(handler => handler())
+        if (this) this.#handlers.forEach(handler => handler())
         Deno.exit()
     }
 
     push(handler:()=>void) {
-        this.#handlers.push(handler)
+        if (this) this.#handlers.push(handler)
     }
 
 }
