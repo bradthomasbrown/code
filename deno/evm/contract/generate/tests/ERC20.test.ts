@@ -73,13 +73,14 @@ async function contractCreated(t: Deno.TestContext, context: Context, contract: 
     const bytecode = contract?.evm?.bytecode?.object
     if (bytecode) {
         const linkReferences = contract?.evm?.bytecode?.linkReferences
-        if (linkReferences) {
-            await t.step('link file exists', async () => await linkFileExists(context))
-            await t.step('refs file exists', async () => await refsFileExists(context))
+        if (linkReferences)
+        {
+            await t.step('link file exists', async () => await linkFile(context))
+            await t.step('refs file exists', async () => await refsFile(context))
+            await t.step('bytecode function file exists', async () => await bytecodeFunctionFile(context))
         }
-        await t.step('bytecode string file exists', async () => await bytecodeStringFileExists(context))
-        await t.step('bytecode function file exists', async () => await bytecodeFunctionFileExists(context))
-        await t.step('link functionality', async () => await linkFunctionality(context))
+        else
+            await t.step('bytecode string file exists', async () => await bytecodeStringFile(context))
     }
 }
 
@@ -89,14 +90,37 @@ async function contractDirExists(context: Context): Promise<void> {
     assert(await exists(path), 'contract dir not found')
 }
 
-async function linkFileExists(context: Context): Promise<void> {
+async function linkFile(context: Context): Promise<void> {
     const path = context.get('source')
     assert(path, 'source path not set')
     assert(await exists(`${path}/_link.ts`), 'link file not found')
+    const { link } = <typeof import('../templates/_link.ts')>await import(`${path}/_link.ts`)
+    assert(typeof link == 'function', 'link is not a function')
 }
 
-async function refsFileExists(context: Context): Promise<void> {
+async function refsFile(context: Context): Promise<void> {
     const path = context.get('contract')
     assert(path, 'contract path not set')
     assert(await exists(`${path}/_refs.ts`), 'refs file not found')
+    const { refs } = <typeof import('../templates/_refs.ts')>await import(`${path}/_refs.ts`)
+    assert(refs instanceof Array, 'refs is not an array')
+}
+
+async function bytecodeStringFile(context: Context): Promise<void> {
+    const path = context.get('contract')
+    assert(path, 'contract path not set')
+    assert(await exists(`${path}/_bytecodeString.ts`), 'bytecode string file not found')
+    const { bytecode } = <typeof import('../templates/_bytecodeString.ts')>await import(`${path}/_bytecodeString.ts`)
+    assert(typeof bytecode == 'string', 'bytecode is not a string')
+}
+
+async function bytecodeFunctionFile(context: Context): Promise<void> {
+    const path = context.get('contract')
+    assert(path, 'contract path not set')
+    assert(await exists(`${path}/bytecode.ts`), 'bytecode function file not found')
+    const { bytecode } = <typeof import('../templates/bytecode.ts')>await import(`${path}/bytecode.ts`)
+    if (await exists(`${path}/_refs.ts`))
+        assert(typeof bytecode == 'function', 'bytecode is not a function')
+    else
+        assert(typeof bytecode == 'string', 'bytecode is not a string')
 }
