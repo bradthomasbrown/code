@@ -1,1 +1,1 @@
-export { contracts as source } from "./contracts.ts"
+export { contracts as source } from "./contracts.ts";

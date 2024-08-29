@@ -1,9 +1,9 @@
-import { encode } from 'npm:@ethereumjs/rlp@5.0.1'
-import * as e from '../jra/mod.ts'
-import { Signer } from './Signer.ts'
-import jsSha3 from 'npm:js-sha3@0.9.2'
-import { hexToBytes } from 'npm:@noble/hashes@1.3.3/utils'
-const { keccak256 } = jsSha3
+import { encode } from "npm:@ethereumjs/rlp@5.0.1";
+import * as e from "../jra/mod.ts";
+import { Signer } from "./Signer.ts";
+import jsSha3 from "npm:js-sha3@0.9.2";
+import { hexToBytes } from "npm:@noble/hashes@1.3.3/utils";
+const { keccak256 } = jsSha3;
 
 // type Opts = {
 //     url:string
@@ -32,31 +32,38 @@ const { keccak256 } = jsSha3
 // }
 
 type Opts = {
-    signer:Signer
-    code:string
-    url:string
-    chainId:number
-    nonce:bigint
-    gasPrice:bigint
-    gasLimit:bigint
-    accessList?:[address:string,slots:string[]][]
-}
+  signer: Signer;
+  code: string;
+  url: string;
+  chainId: number;
+  nonce: bigint;
+  gasPrice: bigint;
+  gasLimit: bigint;
+  accessList?: [address: string, slots: string[]][];
+};
 
 export default function ({
-    signer,
-    code,
+  signer,
+  code,
+  chainId,
+  nonce,
+  gasPrice,
+  gasLimit,
+  accessList = [],
+}: Opts) {
+  const data = code;
+  const stx = signer.signTx({
     chainId,
     nonce,
     gasPrice,
     gasLimit,
-    accessList=[]
-}:Opts) {
-    const data = code
-    const stx = signer.signTx({ chainId, nonce, gasPrice, gasLimit, data, accessList })
-    const stxBytes = hexToBytes(stx.slice(2))
-    const encoding = encode([signer.address, nonce])
-    const ejrrq = e.sendRawTx({ data: stx })
-    const hash = `0x${keccak256(stxBytes)}`
-    const address = `0x${keccak256(encoding).slice(-40)}`
-    return { ejrrq, hash, address }
+    data,
+    accessList,
+  });
+  const stxBytes = hexToBytes(stx.slice(2));
+  const encoding = encode([signer.address, nonce]);
+  const ejrrq = e.sendRawTx({ data: stx });
+  const hash = `0x${keccak256(stxBytes)}`;
+  const address = `0x${keccak256(encoding).slice(-40)}`;
+  return { ejrrq, hash, address };
 }

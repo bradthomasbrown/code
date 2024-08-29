@@ -1,3 +1,3 @@
-import { $E } from '../../../../stdplus/templar/lib/mod.ts'
+import { $E } from "../../../../stdplus/templar/lib/mod.ts";
 
-export const bytecode = $E<string>`bytecode`
+export const bytecode = $E<string>`bytecode`;

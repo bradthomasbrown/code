@@ -1,1 +1,7 @@
-export type Tag = bigint|'latest'|'earliest'|'pending'|'safe'|'finalized'
+export type Tag =
+  | bigint
+  | "latest"
+  | "earliest"
+  | "pending"
+  | "safe"
+  | "finalized";

@@ -1,5 +1,5 @@
 {
-    "imports": {
-        "smartks/": "../../../../../smartks/"
-    }
+  "imports": {
+    "smartks/": "../../../../../smartks/"
+  }
 }

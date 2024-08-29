@@ -5,10 +5,10 @@ export * from "./estimateGas.ts";
 export * from "./gasPrice.ts";
 export * from "./height.ts";
 export * from "./sendRawTx.ts";
-export * from "./receipt.ts"
-export * from './balance.ts'
-export * from './slot.ts'
-export * from './code.ts'
-export * from './traceTx.ts'
-export * from './traceCall.ts'
-export * from './nonce.ts'
+export * from "./receipt.ts";
+export * from "./balance.ts";
+export * from "./slot.ts";
+export * from "./code.ts";
+export * from "./traceTx.ts";
+export * from "./traceCall.ts";
+export * from "./nonce.ts";

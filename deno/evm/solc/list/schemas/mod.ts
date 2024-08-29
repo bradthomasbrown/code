@@ -1,1 +1,1 @@
-export { list } from './stringToList.ts'
+export { list } from "./stringToList.ts";

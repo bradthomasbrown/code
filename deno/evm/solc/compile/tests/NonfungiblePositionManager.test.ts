@@ -1,8 +1,8 @@
-import { compile } from '../lib/mod.ts'
+import { compile } from "../lib/mod.ts";
 
-const edgeCase = 'NonfungiblePositionManager'
+const edgeCase = "NonfungiblePositionManager";
 
 Deno.test(`compile ${edgeCase}`, async () => {
-    const { params } = await import('./params.ts')
-    await compile(params[edgeCase])
-})
+  const { params } = await import("./params.ts");
+  await compile(params[edgeCase]);
+});
