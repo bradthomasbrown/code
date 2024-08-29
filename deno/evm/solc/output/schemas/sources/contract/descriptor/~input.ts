@@ -1,1 +1,0 @@
-export { component as input } from "./~component.ts"

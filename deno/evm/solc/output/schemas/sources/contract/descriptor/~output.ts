@@ -1,1 +1,0 @@
-export { input as output } from "./~input.ts"
