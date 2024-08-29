@@ -9,6 +9,8 @@ type ByName = $T<Record<string, string>,`ByName`>
 
 export function bytecode($P:ByIndex&`paramsByIndex`): string
 export function bytecode($P:ByName&`paramsByName`): string
-export function bytecode(...params: ByIndex | [ByName]): string {
+export function bytecode(...params: ByIndex | [ByName]): string
+export function bytecode(...params: ByIndex | [ByName]): string
+{
     return link(bytecodeString, refs, params)
 }
